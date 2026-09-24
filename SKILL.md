@@ -106,7 +106,133 @@ Apply these to every edit. They are ordered by how often they catch problems.
     details, or claims. A training trick (e.g. a masking scheme) is not a standalone
     contribution; fold it into the method bullet.
 
+### Extended abstracts (2-4 pages)
+24. **Discursive, not inventory.** No C1/C2, F1-F11, P1/P2 label lists in prose;
+    integrate findings into connected paragraphs. If internal labels exist in notes,
+    translate them to plain language ("broader grasp data" not "D2").
+25. **Abstract frames, Experiments proves.** Abstract gives problem, approach, and
+    one or two headline trends; it does not dump numbers, knob names, or ablations.
+    Full numbers live in one results table.
+26. **Few citations, high relevance.** For an extended abstract prefer 5-6 directly
+    load-bearing references over survey coverage. Cite the substrate you build on
+    when space allows (e.g. the locomotion controller underneath the policy).
+27. **Mark partiality explicitly.** An extended abstract is initial work opening
+    toward expanded research, not a closed result. Say "initial steps / initial
+    study / initial deployment" and name the concrete next experiment instead of
+    overclaiming completeness.
+
+### System / embodiment-transfer papers
+28. **Separate general capability from our instantiation.** "A VLA could emit leg
+    joints directly" is general; "our policy emits body-level commands tracked by
+    the locomotion controller" is our choice. Never present our choice as the only
+    possible design.
+29. **Give both motives for the interface choice.** State learning-complexity
+    reduction (body-level decisions, not leg-level control) AND, most importantly,
+    collection-execution consistency (the same controller tracks operator and
+    policy commands). One motive alone reads as incomplete.
+30. **Define the task before the data splits.** Object, goal, instruction variation,
+    and what each subset adds (e.g. "push reaches the same goal without grasping")
+    must appear before any D1/D2/D3 or P1/P2 comparison.
+31. **Present results before discussing them.** Table first with a caption that
+    states what is in- vs out-of-distribution, then the trend sentence, then the
+    phase/ablation figure, then the interpretation. Never interleave discussion
+    without a structured presentation.
+32. **Standardized section order for deployment stories.** Prefer Data Collection,
+    then Training and Inference (model choice, horizon, delay handling, action
+    delivery), then Experiments (data variation), then Deployment. Do not put
+    tuning details after the results they enable.
+33. **Offline evaluation is half the story.** Say what the offline metric is (e.g.
+    FK tip error in mm, comparable to grasp tolerance), why it was chosen over a
+    saturated proxy (e.g. mean joint error), and that on-robot trials remained part
+    of checkpoint selection because errors compound in closed loop.
+34. **Present constraints as enabling choices.** Label conventions, keep-alive
+    threads, trajectory vs instantaneous delivery are positive facts that make data
+    usable, not "consequential" side-effects. Explain them in common technical
+    terms with rates (e.g. 5 Hz policy grid set by the slowest camera, 50 Hz
+    keep-alive holding absolute pitch while zeroing stale velocity).
+35. **Credit effortful construction.** "We designed a shared interface" not "we kept
+    interfaces identical"; "compatible with closed-loop execution on a balancing
+    base" not "that a balancing robot can execute".
+
+### Supervisor style lessons (from inline review rounds)
+Distilled from supervisor `# NOTE` / `\note{...}` comments on the legged-VLA
+manuscript. These bias every future edit; when a new supervisor comment matches
+one, apply the rule without being told again.
+36. **Write for both communities (ML + robotics).** "Experiments" means
+    architecture studies in ML and hardware tests in robotics; "deployment"
+    means moving to hardware. Prefer "Offline Evaluation" vs "Hardware
+    Deployment" as section names, and "closed-loop real-world experiments" in
+    the abstract, so the text reaches every community.
+37. **Put the money figure early.** A rollout/hardware visual on the first page
+    tells the reader the topic immediately and is more impactful than a late
+    reveal. Tighten subfigure gaps (`\hspace{2mm}` over `\hfill`) so the figure
+    earns its space.
+38. **Qualify which X on first use.** "The action space" → "the commanded action
+    space of the policy"; "the task" inside Data Collection → "the robot task";
+    "head-mounted" must say mounted on what ("mounted on the quadruped's
+    head"). Never assume the reader carries the intended reading from a
+    distant noun.
+39. **Introduce mechanisms before role nouns.** "Leader" means nothing until the
+    leader–follower pair is named; write "the leader device in a
+    leader–follower pair". Same for any role noun that implies an unintroduced
+    mechanism.
+40. **Reuse established vocabulary; never coin mid-paper.** A term used once
+    ("balancing base", "useful field of view") confuses more than it adds.
+    Reuse what the paper already built ("the quadruped", "the forward camera
+    view in which the robot can act"), and define any genuinely new term at
+    first use.
+41. **Gloss domain jargon for the general reader.** "Absolute joint-position
+    targets", "relative delta commands integrated over time", "action chunk (a
+    sequence of predicted actions)". Test each jargon term against a reader
+    outside the subfield; ML-common words ("chunk") still need their object
+    ("of what?").
+42. **No metaphorical words in technical prose.** "Consumes" (for controllers),
+    "bank" (for sets), bare "chunk", "staleness" — use literal terms
+    ("expects", "set", "sequence of predicted actions", "outdated plans")
+    unless the metaphor is marginal and avoids repetition.
+43. **Precise verbs everywhere, not just operations.** Operators "collect"
+    demonstrations (not "produce"); authors "verify" (not "check"); studies
+    "examine" (not "ask"). Prefer technical verbs over discursive ones.
+44. **Plain nouns: strip overspecificity, disambiguate "scale".**
+    "Configuration" where "joint positions" suffices; drop modifiers that add
+    no information. "Scale" is overloaded in ML — write "dataset size" /
+    "demonstration count" for amount of data.
+45. **Check the logic of every connector.** "While" claims contrast; if the
+    relation is additive, write "and". Contrast one clause against the next
+    deliberately (extends rule 15).
+46. **Demote unintroduced factors to examples.** Factors never built in the
+    paper (delays, contact, balance) enter as "the same physical factors, such
+    as …", not as definite claims that inherit unexplained importance.
+47. **Name table content in prose, with matching units.** A results paragraph
+    must name what it reports ("held-out action-prediction error for grasp and
+    push"), and numbers must match the table: gripper accuracy in percent in
+    both header and prose ("57%", never 0.57 in one and % in the other).
+48. **Spell out the takeaway; no slogans.** "At the demonstration counts
+    available here, data coverage limits performance more than model capacity
+    does" — not a compressed "coverage, not capacity" contraction. State both
+    sides plainly so the message survives skimming.
+49. **No "half of X" without naming the whole.** "Insufficient to judge
+    deployment readiness because errors may compound in closed loop" — say
+    what is missing and for whom, never bare "half of the evidence".
+50. **Soften absolutist contribution framing.** "Practical steps", not "the
+    steps necessary". The paper presents *a* route, not *the* route (mirror of
+    rule 6: neither downplay nor over-absolutize).
+51. **Name the referent, then cite.** "Initial body placement, the
+    initial-approach phase that Fig. X shows as …" — never a bare figure
+    citation as the only identifier of which phase/mode/condition is meant
+    (extends rule 9).
+
 ## Workflow
+
+### 0. General read before local fixes
+Read the whole document plus all inline notes first. Supervisor notes that look
+like line edits ("rephrase X", "this is unclear") often require a reasoned
+structural change: a missing task definition, a tuning section placed after the
+results it enables, or a discussion without a preceding table. Plan the
+restructure, then edit. Never treat comments as isolated line substitutions.
+A weak auto-generated redraft (e.g. `main-claude.tex`) may be mined for recalled
+technicalities (latencies, horizons, keep-alive rates, depth diagnostics) but
+never copied for prose; verify any reused number against code or notes.
 
 ### 1. Inventory the notes
 Before editing, find every inline marker so none is missed:
